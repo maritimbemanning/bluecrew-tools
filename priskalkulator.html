@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priskalkulator — Bluecrew</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-800: #172a5c;
+  --navy-700: #1a3278;
+  --gold-500: #a08563;
+  --gold-400: #bfa77d;
+  --gold-300: #d4c4a0;
+  --cream-50: #fdfcfa;
+  --cream-100: #faf6f0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(165deg, var(--cream-50) 0%, var(--cream-100) 40%, #f0ebe3 100%);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-weight: 300;
+  color: var(--navy-800);
+}
+
+.header {
+  background: var(--navy-800);
+  padding: 32px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(26,50,120,0.27) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-text {
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold-400);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--cream-50);
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: rgba(191,167,125,0.7);
+  margin-top: 6px;
+  font-weight: 300;
+}
+
+.main { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e0dbd4;
+  padding: 4px;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 9px;
+  border: none;
+  background: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(23,42,92,0.5);
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: center;
+}
+
+.tab.active {
+  background: var(--navy-800);
+  color: var(--cream-50);
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(23,42,92,0.2);
+}
+
+.tab:hover:not(.active) { color: var(--navy-800); background: var(--cream-100); }
+
+/* Sections */
+.section-label {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+/* Input card */
+.card {
+  background: white;
+  border: 1px solid #e8e3dc;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 0;
+}
+
+.input-row-2 { grid-template-columns: 1fr 1fr; }
+
+.input-group label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.input-group input, .input-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #e0dbd4;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--navy-800);
+  background: white;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus, .input-group select:focus { border-color: var(--navy-700); }
+
+.input-group .hint {
+  font-size: 11px;
+  color: rgba(23,42,92,0.4);
+  margin-top: 4px;
+  font-weight: 300;
+}
+
+/* Quick-select maritime positions */
+.position-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.position-btn {
+  padding: 10px 14px;
+  border: 1px solid #e0dbd4;
+  border-radius: 8px;
+  background: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--navy-800);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.position-btn:hover { border-color: var(--gold-400); background: var(--cream-100); }
+.position-btn.active { border-color: var(--navy-800); background: var(--navy-800); color: var(--cream-50); }
+.position-btn .rate { font-weight: 500; font-size: 13px; }
+.position-btn.active .cat { color: var(--gold-400); }
+.position-btn .cat { color: var(--gold-500); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Cost breakdown */
+.breakdown {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 16px;
+  align-items: center;
+}
+
+.breakdown-label {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(23,42,92,0.7);
+}
+
+.breakdown-value {
+  font-size: 13px;
+  font-weight: 400;
+  text-align: right;
+  color: var(--navy-800);
+}
+
+.breakdown-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: #f0ebe3;
+  margin: 4px 0;
+}
+
+.breakdown-total .breakdown-label {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--navy-800);
+}
+
+.breakdown-total .breakdown-value {
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--navy-800);
+}
+
+.cost-factor-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold-500);
+  background: rgba(160,133,99,0.08);
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-top: 8px;
+}
+
+/* Pricing table */
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.price-table th {
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  font-weight: 500;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid #e8e3dc;
+}
+
+.price-table th:not(:first-child) { text-align: right; }
+
+.price-table td {
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 300;
+  border-bottom: 1px solid #f0ebe3;
+}
+
+.price-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+
+.price-table tr:hover { background: var(--cream-100); }
+
+.price-table .level-name { font-weight: 400; }
+.price-table .margin-pct { color: var(--gold-500); font-size: 12px; }
+.price-table .margin-val { font-weight: 500; color: #166534; }
+
+.price-table tr.highlight { background: rgba(23,42,92,0.03); }
+.price-table tr.highlight td { font-weight: 400; }
+
+/* Monthly summary */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.summary-card {
+  background: var(--cream-100);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.summary-card.highlight {
+  background: var(--navy-800);
+  color: var(--cream-50);
+}
+
+.summary-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--gold-500);
+  margin-bottom: 6px;
+}
+
+.summary-card.highlight .summary-label { color: var(--gold-400); }
+
+.summary-amount {
+  font-size: 20px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-sub {
+  font-size: 11px;
+  color: rgba(23,42,92,0.4);
+  margin-top: 2px;
+}
+
+.summary-card.highlight .summary-sub { color: rgba(250,246,240,0.5); }
+
+/* Multi candidate */
+.multi-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.multi-row label {
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.multi-row input {
+  width: 80px;
+  padding: 8px 12px;
+  border: 1.5px solid #e0dbd4;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--navy-800);
+  text-align: center;
+  outline: none;
+}
+
+.multi-row input:focus { border-color: var(--navy-700); }
+
+/* Back link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(191,167,125,0.7);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  transition: color 0.2s;
+}
+
+.back-link:hover { color: var(--gold-400); }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .input-row { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); }
+  .header { padding: 24px 20px; }
+  .main { padding: 24px 16px 60px; }
+  .title { font-size: 22px; }
+  .position-grid { grid-template-columns: 1fr; }
+}
+
+.fade-in { opacity: 0; transform: translateY(12px); animation: fadeIn 0.5s forwards; }
+@keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+.confidential {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-weight: 500;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← Tilbake til Toolbox</a>
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+      <div class="logo-text">Bluecrew</div>
+      <span class="confidential">Konfidensielt</span>
+    </div>
+    <div class="title">Priskalkulator</div>
+    <div class="subtitle">Kostnadskalkyle, kundepriser og marginer — havbruk, offshore, industri og maritimt</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="tabs fade-in">
+    <button class="tab active" onclick="switchTab('custom')">Egendefinert</button>
+    <button class="tab" onclick="switchTab('maritime')">Maritimt prisark</button>
+  </div>
+
+  <!-- TAB: Custom calculator -->
+  <div id="tab-custom" class="fade-in" style="animation-delay:0.1s;">
+
+    <div class="section-label">Input</div>
+    <div class="card">
+      <div class="input-row" style="margin-bottom:16px;">
+        <div class="input-group">
+          <label>Kandidatens timelønn</label>
+          <input type="number" id="hourlyRate" value="340" min="0" step="10" oninput="calculate()">
+          <div class="hint">kr/time</div>
+        </div>
+        <div class="input-group">
+          <label>Timer per dag</label>
+          <input type="number" id="hoursPerDay" value="12" min="1" max="24" step="0.5" oninput="calculate()">
+          <div class="hint">7.5 verft · 10 havbruk · 12 offshore</div>
+        </div>
+        <div class="input-group">
+          <label>Arbeidsdager per mnd</label>
+          <input type="number" id="daysPerMonth" value="22" min="1" max="31" step="1" oninput="calculate()">
+          <div class="hint">Estimat for månedsoversikt</div>
+        </div>
+      </div>
+      <div class="input-row input-row-2">
+        <div class="input-group">
+          <label>Segment</label>
+          <select id="segment" onchange="updatePresets(); calculate();">
+            <option value="offshore">Offshore (12t/dag)</option>
+            <option value="havbruk">Havbruk (10t/dag)</option>
+            <option value="industri">Industri / Verft (7.5t/dag)</option>
+            <option value="custom">Egendefinert</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Kundenavn (valgfritt)</label>
+          <input type="text" id="customerName" placeholder="F.eks. Westcon, Norgeskjel...">
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Kostnadskalkyle</div>
+    <div class="card">
+      <div class="breakdown" id="breakdown"></div>
+    </div>
+
+    <div class="section-label">Kundepriser</div>
+    <div class="card">
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Prisnivå</th>
+            <th>kr/time</th>
+            <th>kr/dag</th>
+            <th>Margin kr/t</th>
+            <th>Margin %</th>
+          </tr>
+        </thead>
+        <tbody id="priceTable"></tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Månedsoversikt per kandidat</div>
+    <div class="summary-grid" id="monthlySummary"></div>
+
+    <div style="margin-top:28px;">
+      <div class="section-label">Flere kandidater</div>
+      <div class="card">
+        <div class="multi-row">
+          <label>Antall utleide kandidater</label>
+          <input type="number" id="numCandidates" value="5" min="1" max="100" oninput="calculate()">
+        </div>
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Prisnivå</th>
+              <th>Total margin kr/mnd</th>
+              <th>Total margin kr/år</th>
+            </tr>
+          </thead>
+          <tbody id="multiTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Maritime price sheet -->
+  <div id="tab-maritime" style="display:none;">
+    <div class="section-label">Velg stilling — priser fylles automatisk</div>
+    <div class="position-grid" id="positionGrid"></div>
+
+    <div id="maritime-detail" style="display:none;">
+      <div class="section-label">Prisdetaljer</div>
+      <div class="card" id="maritime-card"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const MARGINS = [
+  { name: 'Stor Ramme', pct: 0.22, desc: 'Volum min 6 mnd' },
+  { name: 'Ramme', pct: 0.25, desc: 'Standard' },
+  { name: 'Ad-hoc', pct: 0.29, desc: 'Enkeltleveranse' },
+  { name: 'Rush', pct: 0.35, desc: '< 48 timer' }
+];
+
+const COST = {
+  feriepenger: 0.12,
+  aga: 0.141,
+  otp: 0.02,
+  forsikring: 0.025
+};
+
+const MARITIME = [
+  { cat: 'DEKK', title: 'Matros', exp: 'D6, 0-2 år', rate: 265 },
+  { cat: 'DEKK', title: 'Matros', exp: 'D6 + fagbrev, 3+ år', rate: 290 },
+  { cat: 'DEKK', title: 'Båtsmann', exp: 'D6 + erfaring', rate: 320 },
+  { cat: 'DEKK', title: 'Styrmann', exp: 'D3/D2, 0-3 år', rate: 380 },
+  { cat: 'DEKK', title: 'Overstyrmann', exp: 'D2/D1, erfaren', rate: 420 },
+  { cat: 'DEKK', title: 'Skipper/Skipsfører', exp: 'D1/D2, 5+ år', rate: 480 },
+  { cat: 'MASKIN', title: 'Motormann', exp: 'Uten sertifikat', rate: 260 },
+  { cat: 'MASKIN', title: 'Maskinist', exp: 'M3/M2, 0-3 år', rate: 370 },
+  { cat: 'MASKIN', title: '1. Maskinist', exp: 'M2/M1, erfaren', rate: 430 },
+  { cat: 'MASKIN', title: 'Maskinsjef', exp: 'M1, 5+ år', rate: 500 },
+  { cat: 'ELEKTRO', title: 'Skipelektriker', exp: 'Fagbrev + maritim', rate: 380 },
+  { cat: 'ELEKTRO', title: 'Elektrooffiser', exp: 'Elektrosertifikat', rate: 440 },
+  { cat: 'FORPLEINING', title: 'Kokk/Messegutt', exp: 'Ufaglært', rate: 240 },
+  { cat: 'FORPLEINING', title: 'Skipskokk', exp: 'Fagbrev kokk', rate: 290 },
+  { cat: 'FORPLEINING', title: 'Steward', exp: 'Servicebakgrunn', rate: 245 },
+  { cat: 'SPESIAL', title: 'Kranfører', exp: 'Kranførerbevis', rate: 340 },
+  { cat: 'SPESIAL', title: 'Borearbeider', exp: 'Sikkerhetsklarert', rate: 300 },
+  { cat: 'SPESIAL', title: 'AB/Leiebåtfører', exp: 'D6L, lokalkjent', rate: 310 },
+  { cat: 'SPESIAL', title: 'Dykkerassistent', exp: 'Sertifisert, offshore', rate: 350 },
+  { cat: 'KADETT', title: 'Dekkskadett', exp: 'Under utdanning', rate: 190 }
+];
+
+function fmt(n) { return Math.round(n).toLocaleString('nb-NO'); }
+
+function calcCost(hourly) {
+  const fp = hourly * COST.feriepenger;
+  const aga = (hourly + fp) * COST.aga;
+  const otp = hourly * COST.otp;
+  const agaOtp = otp * COST.aga;
+  const ins = hourly * COST.forsikring;
+  const total = hourly + fp + aga + otp + agaOtp + ins;
+  return { hourly, fp, aga, otp, agaOtp, ins, total, factor: total / hourly };
+}
+
+function calcPrice(costPerHour, marginPct) {
+  return costPerHour / (1 - marginPct);
+}
+
+function calculate() {
+  const hourly = parseFloat(document.getElementById('hourlyRate').value) || 0;
+  const hpd = parseFloat(document.getElementById('hoursPerDay').value) || 12;
+  const dpm = parseFloat(document.getElementById('daysPerMonth').value) || 22;
+  const numC = parseInt(document.getElementById('numCandidates').value) || 1;
+
+  const cost = calcCost(hourly);
+
+  // Breakdown
+  document.getElementById('breakdown').innerHTML = `
+    <div class="breakdown-label">Kandidat timelønn</div>
+    <div class="breakdown-value">${fmt(cost.hourly)} kr/t → ${fmt(cost.hourly * hpd)} kr/dag</div>
+    <div class="breakdown-label">Feriepenger (12%)</div>
+    <div class="breakdown-value">+ ${cost.fp.toFixed(1)} kr/t</div>
+    <div class="breakdown-label">Arbeidsgiveravgift 14.1% (lønn + feriep.)</div>
+    <div class="breakdown-value">+ ${cost.aga.toFixed(1)} kr/t</div>
+    <div class="breakdown-label">OTP pensjon (2%)</div>
+    <div class="breakdown-value">+ ${cost.otp.toFixed(1)} kr/t</div>
+    <div class="breakdown-label">AGA på pensjon (14.1%)</div>
+    <div class="breakdown-value">+ ${cost.agaOtp.toFixed(1)} kr/t</div>
+    <div class="breakdown-label">Yrkesskadeforsikring (~2.5%)</div>
+    <div class="breakdown-value">+ ${cost.ins.toFixed(1)} kr/t</div>
+    <div class="breakdown-divider"></div>
+    <div class="breakdown-label breakdown-total"><span class="breakdown-label">TOTAL KOSTNAD</span></div>
+    <div class="breakdown-value breakdown-total"><span class="breakdown-value">${fmt(cost.total)} kr/t → ${fmt(cost.total * hpd)} kr/dag</span></div>
+  `;
+  document.getElementById('breakdown').innerHTML += `<div style="grid-column:1/-1;"><span class="cost-factor-badge">Kostnadsfaktor: ×${cost.factor.toFixed(2)}</span></div>`;
+
+  // Price table
+  let ptHtml = '';
+  MARGINS.forEach((m, i) => {
+    const price = calcPrice(cost.total, m.pct);
+    const priceDay = price * hpd;
+    const marginKr = price - cost.total;
+    ptHtml += `<tr class="${i === 1 ? 'highlight' : ''}">
+      <td><span class="level-name">${m.name}</span> <span class="margin-pct">(${Math.round(m.pct*100)}%)</span></td>
+      <td>${fmt(price)}</td>
+      <td>${fmt(priceDay)}</td>
+      <td class="margin-val">+${fmt(marginKr)}</td>
+      <td class="margin-pct">${(m.pct*100).toFixed(0)}%</td>
+    </tr>`;
+  });
+  document.getElementById('priceTable').innerHTML = ptHtml;
+
+  // Monthly summary
+  let msHtml = '';
+  MARGINS.forEach((m, i) => {
+    const price = calcPrice(cost.total, m.pct);
+    const priceMonth = price * hpd * dpm;
+    const costMonth = cost.total * hpd * dpm;
+    const marginMonth = priceMonth - costMonth;
+    msHtml += `<div class="summary-card ${i === 1 ? 'highlight' : ''}">
+      <div class="summary-label">${m.name}</div>
+      <div class="summary-amount">${fmt(marginMonth)}</div>
+      <div class="summary-sub">margin kr/mnd</div>
+    </div>`;
+  });
+  document.getElementById('monthlySummary').innerHTML = msHtml;
+
+  // Multi table
+  let mtHtml = '';
+  MARGINS.forEach((m, i) => {
+    const price = calcPrice(cost.total, m.pct);
+    const marginMonth = (price - cost.total) * hpd * dpm * numC;
+    const marginYear = marginMonth * 12;
+    mtHtml += `<tr class="${i === 1 ? 'highlight' : ''}">
+      <td><span class="level-name">${m.name}</span> <span class="margin-pct">(${Math.round(m.pct*100)}%)</span></td>
+      <td style="font-weight:500;">${fmt(marginMonth)}</td>
+      <td style="font-weight:500;">${fmt(marginYear)}</td>
+    </tr>`;
+  });
+  document.getElementById('multiTable').innerHTML = mtHtml;
+}
+
+function updatePresets() {
+  const seg = document.getElementById('segment').value;
+  const hpd = document.getElementById('hoursPerDay');
+  if (seg === 'offshore') hpd.value = 12;
+  else if (seg === 'havbruk') hpd.value = 10;
+  else if (seg === 'industri') hpd.value = 7.5;
+}
+
+// Tabs
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => {
+    if ((tab === 'custom' && t.textContent.includes('Egendefinert')) ||
+        (tab === 'maritime' && t.textContent.includes('Maritimt'))) {
+      t.classList.add('active');
+    }
+  });
+  document.getElementById('tab-custom').style.display = tab === 'custom' ? 'block' : 'none';
+  document.getElementById('tab-maritime').style.display = tab === 'maritime' ? 'block' : 'none';
+}
+
+// Maritime position grid
+function buildMaritimeGrid() {
+  const grid = document.getElementById('positionGrid');
+  let html = '';
+  MARITIME.forEach((pos, i) => {
+    html += `<button class="position-btn" data-idx="${i}" onclick="selectPosition(${i}, this)">
+      <div>
+        <div class="cat">${pos.cat}</div>
+        <div>${pos.title}</div>
+      </div>
+      <span class="rate">${pos.rate} kr/t</span>
+    </button>`;
+  });
+  grid.innerHTML = html;
+}
+
+function selectPosition(idx, el) {
+  document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  const pos = MARITIME[idx];
+  const cost = calcCost(pos.rate);
+  const hpd = 12; // Maritime default
+
+  let html = `<div style="margin-bottom:16px;">
+    <div style="font-size:18px;font-weight:500;">${pos.title}</div>
+    <div style="font-size:13px;color:var(--gold-500);margin-top:2px;">${pos.cat} · ${pos.exp} · ${pos.rate} kr/t kandidatlønn</div>
+  </div>
+  <div style="font-size:12px;color:rgba(23,42,92,0.5);margin-bottom:12px;">Basert på 12 timer/dag (standard maritimt)</div>
+  <table class="price-table">
+    <thead><tr><th>Prisnivå</th><th>kr/time</th><th>kr/dag</th><th>Margin kr/t</th></tr></thead><tbody>`;
+
+  MARGINS.forEach((m, i) => {
+    const price = calcPrice(cost.total, m.pct);
+    const priceDay = price * hpd;
+    const marginKr = price - cost.total;
+    html += `<tr class="${i === 1 ? 'highlight' : ''}">
+      <td><span class="level-name">${m.name}</span> <span class="margin-pct">(${Math.round(m.pct*100)}%)</span></td>
+      <td>${fmt(price)}</td>
+      <td>${fmt(priceDay)}</td>
+      <td class="margin-val">+${fmt(marginKr)}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+
+  html += `<div style="margin-top:16px;padding-top:16px;border-top:1px solid #f0ebe3;">
+    <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold-500);font-weight:500;margin-bottom:8px;">Kostnadskalkyle</div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:4px 16px;font-size:13px;">
+      <span style="color:rgba(23,42,92,0.6);">Kandidat timelønn</span><span style="text-align:right;">${pos.rate} kr/t</span>
+      <span style="color:rgba(23,42,92,0.6);">Total kostnad (×${cost.factor.toFixed(2)})</span><span style="text-align:right;font-weight:500;">${fmt(cost.total)} kr/t → ${fmt(cost.total * hpd)} kr/dag</span>
+    </div>
+    <span class="cost-factor-badge" style="margin-top:8px;">AGA 14.1% (utleieregel) · Alle priser eks. mva</span>
+  </div>`;
+
+  document.getElementById('maritime-card').innerHTML = html;
+  document.getElementById('maritime-detail').style.display = 'block';
+}
+
+// Init
+buildMaritimeGrid();
+calculate();
+</script>
+
+</body>
+</html>
