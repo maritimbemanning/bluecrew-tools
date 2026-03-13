@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bluecrew AS — Årsprognose 2025/26</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-900:#0a1225; --navy-800:#172a5c; --navy-700:#1a3278; --navy-600:#1e3d94;
+  --gold-500:#a08563; --gold-400:#bfa77d; --gold-300:#d4c4a0;
+  --cream:#fdfcfa; --green:#2d8a56; --red:#c0392b; --orange:#e67e22; --blue:#3498db;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh; background:linear-gradient(170deg,#0d1a3a 0%,var(--navy-900) 50%,#060c1a 100%);
+  font-family:'Inter',-apple-system,sans-serif; color:var(--cream); overflow-x:hidden;}
+.container{max-width:1140px;margin:0 auto;padding:32px 24px 48px;position:relative;z-index:1}
+
+body::before{content:'';position:fixed;top:0;right:0;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(191,167,125,0.04) 0%,transparent 60%);pointer-events:none;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes scan{0%{top:-2px}100%{top:calc(100% + 2px)}}
+.fade{animation:fadeUp .6s ease both}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}
+.d5{animation-delay:.5s}.d6{animation-delay:.6s}.d7{animation-delay:.7s}.d8{animation-delay:.8s}.d9{animation-delay:.9s}
+
+.header-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,var(--gold-500),var(--gold-400));
+  display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:var(--navy-800)}
+.brand{font-size:13px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;
+  background:linear-gradient(90deg,var(--gold-400),var(--gold-500),var(--gold-400));background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite}
+h1{font-size:28px;font-weight:500;line-height:1.2}
+.sub{color:rgba(253,252,250,0.4);font-size:14px;margin-top:4px;font-weight:300}
+
+.panel{background:rgba(26,50,120,0.18);backdrop-filter:blur(12px);border:1px solid rgba(160,133,99,0.08);
+  border-radius:16px;padding:24px 20px;margin-bottom:20px}
+.panel h2{font-size:16px;font-weight:500;margin-bottom:16px}
+.panel h3{font-size:14px;font-weight:500;margin:16px 0 10px;color:var(--gold-400)}
+
+/* Scenario cards */
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0}
+@media(max-width:800px){.scenario-grid{grid-template-columns:1fr}}
+.scenario{border-radius:14px;padding:24px 20px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.scenario:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.scenario.conservative{background:linear-gradient(135deg,rgba(52,152,219,0.12),rgba(52,152,219,0.04));border:1px solid rgba(52,152,219,0.2)}
+.scenario.base{background:linear-gradient(135deg,rgba(45,138,86,0.12),rgba(45,138,86,0.04));border:1px solid rgba(45,138,86,0.25);
+  box-shadow:0 0 30px rgba(45,138,86,0.08)}
+.scenario.optimistic{background:linear-gradient(135deg,rgba(230,126,34,0.12),rgba(230,126,34,0.04));border:1px solid rgba(230,126,34,0.2)}
+.sc-tag{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:12px}
+.sc-tag.con{background:rgba(52,152,219,0.15);color:var(--blue)}
+.sc-tag.base{background:rgba(45,138,86,0.15);color:var(--green)}
+.sc-tag.opt{background:rgba(230,126,34,0.15);color:var(--orange)}
+.sc-label{font-size:11px;color:rgba(253,252,250,0.5);font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+.sc-val{font-size:32px;font-weight:500;line-height:1.1;margin-bottom:4px}
+.sc-val.blue{color:var(--blue)}.sc-val.green{color:var(--green)}.sc-val.orange{color:var(--orange)}
+.sc-detail{font-size:11px;color:rgba(253,252,250,0.4);margin-top:4px;line-height:1.5}
+
+/* Tabs */
+.tab-bar{display:flex;gap:4px;background:rgba(23,42,92,0.6);border-radius:8px;padding:3px}
+.tab{background:transparent;color:rgba(253,252,250,0.4);border:none;border-radius:6px;padding:6px 14px;
+  font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.tab.active{background:var(--gold-500);color:var(--navy-800)}
+
+/* Assumption cards */
+.assume-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.assume{background:rgba(23,42,92,0.3);border:1px solid rgba(253,252,250,0.06);border-radius:10px;padding:16px}
+.assume-icon{font-size:20px;margin-bottom:8px}
+.assume-title{font-size:12px;font-weight:500;color:var(--gold-400);margin-bottom:4px}
+.assume-text{font-size:11px;color:rgba(253,252,250,0.5);line-height:1.5}
+
+/* Risk bar */
+.risk{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(253,252,250,0.04)}
+.risk:last-child{border-bottom:none}
+.risk-level{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.risk-level.high{background:var(--red)}.risk-level.med{background:var(--orange)}.risk-level.low{background:var(--green)}
+.risk-text{font-size:12px;color:rgba(253,252,250,0.6);flex:1}
+.risk-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:10px}
+.risk-label.high{background:rgba(192,57,43,0.15);color:var(--red)}
+.risk-label.med{background:rgba(230,126,34,0.12);color:var(--orange)}
+.risk-label.low{background:rgba(45,138,86,0.12);color:var(--green)}
+
+/* Two col */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}}
+
+/* Monthly forecast table */
+.fc-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.fc-tbl th{text-align:left;color:var(--gold-400);font-size:10px;font-weight:500;text-transform:uppercase;
+  letter-spacing:.05em;padding:6px 8px;border-bottom:1px solid rgba(253,252,250,0.08)}
+.fc-tbl th:not(:first-child){text-align:right}
+.fc-tbl td{padding:7px 8px;border-bottom:1px solid rgba(253,252,250,0.03);color:rgba(253,252,250,0.6)}
+.fc-tbl td:not(:first-child){text-align:right}
+.fc-tbl tr.actual td{color:rgba(253,252,250,0.8)}
+.fc-tbl tr.actual td:first-child::after{content:' ✓';font-size:9px;color:var(--green)}
+.fc-tbl tr.est td{color:var(--orange);font-style:italic}
+.fc-tbl tr.est td:first-child::after{content:' *';font-size:9px}
+.fc-tbl tr.total td{font-weight:600;color:var(--cream);border-top:2px solid rgba(160,133,99,0.3);font-size:12px}
+
+/* Milestone */
+.milestone{display:flex;align-items:center;gap:16px;padding:14px 16px;border-radius:10px;
+  background:rgba(23,42,92,0.3);border:1px solid rgba(253,252,250,0.05);margin-bottom:8px}
+.ms-num{font-size:24px;font-weight:500;color:var(--gold-400);min-width:70px}
+.ms-label{font-size:12px;font-weight:500;color:var(--cream)}
+.ms-sub{font-size:11px;color:rgba(253,252,250,0.4);margin-top:2px}
+
+canvas{max-height:300px}
+.footer{text-align:center;padding:20px 0;color:rgba(253,252,250,0.2);font-size:11px}
+
+/* Scan line effect on scenario hover */
+.scenario::after{content:'';position:absolute;top:-2px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(253,252,250,0.15),transparent);opacity:0;transition:opacity .3s}
+.scenario:hover::after{opacity:1;animation:scan 2s linear infinite}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="fade">
+    <div class="header-row">
+      <div class="logo">B</div>
+      <span class="brand">Bluecrew AS</span>
+    </div>
+    <h1>Årsprognose & Analyse</h1>
+    <p class="sub">Første driftsår: Oktober 2025 — September 2026 &nbsp;·&nbsp; Scenariobasert fremskrivning</p>
+  </div>
+
+  <!-- Status so far -->
+  <div class="panel fade d1" style="margin-top:24px;border-left:3px solid var(--gold-500)">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+      <div>
+        <p style="font-size:11px;color:var(--gold-400);font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Bekreftet per 8. mars 2026</p>
+        <p style="font-size:36px;font-weight:500;background:linear-gradient(135deg,var(--cream),var(--gold-300));-webkit-background-clip:text;-webkit-text-fill-color:transparent">
+          3 216 668 kr</p>
+        <p style="font-size:12px;color:rgba(253,252,250,0.4);margin-top:4px">5 mnd drift · okt–feb regnskapsført + mars bekreftet estimat</p>
+      </div>
+      <div style="text-align:right">
+        <p style="font-size:11px;color:rgba(253,252,250,0.4);margin-bottom:4px">Gjenstår i driftsår</p>
+        <p style="font-size:28px;font-weight:500;color:var(--cream)">7 måneder</p>
+        <p style="font-size:11px;color:rgba(253,252,250,0.35)">apr–sep 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 Scenarios -->
+  <div class="scenario-grid">
+    <div class="scenario conservative fade d2">
+      <span class="sc-tag con">Konservativ</span>
+      <p class="sc-label">Årlig omsetning</p>
+      <p class="sc-val blue">~9.5M</p>
+      <p class="sc-detail">
+        Veksten flater ut. Ingen ny salgsleder.<br>
+        Snitt ~1.05M/mnd apr–sep.<br>
+        Driftsmargin: 8–10%<br>
+        Resultat: ~750k–930k
+      </p>
+    </div>
+    <div class="scenario base fade d3">
+      <span class="sc-tag base">Basisscenario</span>
+      <p class="sc-label">Årlig omsetning</p>
+      <p class="sc-val green">~11.0M</p>
+      <p class="sc-detail">
+        Salgsleder starter apr/mai. 2–3 nye kunder.<br>
+        Gradvis vekst til ~1.5M/mnd.<br>
+        Driftsmargin: 10–13%<br>
+        Resultat: ~1.1M–1.4M
+      </p>
+    </div>
+    <div class="scenario optimistic fade d4">
+      <span class="sc-tag opt">Offensiv</span>
+      <p class="sc-label">Årlig omsetning</p>
+      <p class="sc-val orange">~12.8M</p>
+      <p class="sc-detail">
+        Salgsleder + nye vertikaler (aqua/industri).<br>
+        Rask skalering til 2M+/mnd.<br>
+        Driftsmargin: 12–15%<br>
+        Resultat: ~1.5M–1.9M
+      </p>
+    </div>
+  </div>
+
+  <!-- Main forecast chart -->
+  <div class="panel fade d4">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+      <h2 style="margin:0">12-måneders fremskrivning</h2>
+      <div class="tab-bar">
+        <button class="tab active" onclick="switchMain('monthly')">Månedlig</button>
+        <button class="tab" onclick="switchMain('cumulative')">Kumulativ</button>
+      </div>
+    </div>
+    <canvas id="forecastChart"></canvas>
+  </div>
+
+  <!-- Assumptions & detailed table -->
+  <div class="two-col">
+
+    <!-- Forecast table -->
+    <div class="panel fade d5">
+      <h2>Basisscenario — Månedlig</h2>
+      <table class="fc-tbl">
+        <thead><tr><th>Måned</th><th>Omsetning</th><th>Kostnader</th><th>Resultat</th></tr></thead>
+        <tbody>
+          <tr class="actual"><td>Okt '25</td><td>0</td><td>1 678</td><td style="color:#c0392b">-1 678</td></tr>
+          <tr class="actual"><td>Nov '25</td><td>64 083</td><td>37 077</td><td style="color:#2d8a56">27 006</td></tr>
+          <tr class="actual"><td>Des '25</td><td>181 403</td><td>190 296</td><td style="color:#c0392b">-8 893</td></tr>
+          <tr class="actual"><td>Jan '26</td><td>405 952</td><td>381 764</td><td style="color:#2d8a56">24 188</td></tr>
+          <tr class="actual"><td>Feb '26</td><td>1 081 711</td><td>933 070</td><td style="color:#2d8a56">148 641</td></tr>
+          <tr class="est"><td>Mar '26</td><td>1 483 520</td><td>1 240 000</td><td>243 520</td></tr>
+          <tr class="est"><td>Apr '26</td><td>1 200 000</td><td>1 020 000</td><td>180 000</td></tr>
+          <tr class="est"><td>Mai '26</td><td>1 350 000</td><td>1 120 000</td><td>230 000</td></tr>
+          <tr class="est"><td>Jun '26</td><td>1 400 000</td><td>1 150 000</td><td>250 000</td></tr>
+          <tr class="est"><td>Jul '26</td><td>1 000 000</td><td>880 000</td><td>120 000</td></tr>
+          <tr class="est"><td>Aug '26</td><td>1 300 000</td><td>1 080 000</td><td>220 000</td></tr>
+          <tr class="est"><td>Sep '26</td><td>1 500 000</td><td>1 230 000</td><td>270 000</td></tr>
+          <tr class="total"><td>TOTALT</td><td>10 966 669</td><td>9 263 885</td><td style="color:#2d8a56">1 702 784</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Key assumptions -->
+    <div class="panel fade d6">
+      <h2>Nøkkelforutsetninger</h2>
+      <div class="assume-grid">
+        <div class="assume">
+          <div class="assume-icon">👥</div>
+          <div class="assume-title">Team-utvidelse</div>
+          <div class="assume-text">2 nye ansatte i Q2. Salgsleder fra apr/mai. Økt kapasitet til å håndtere flere kunder og rotasjoner.</div>
+        </div>
+        <div class="assume">
+          <div class="assume-icon">📉</div>
+          <div class="assume-title">Juli-dip</div>
+          <div class="assume-text">Sommerferie gir naturlig nedgang. Offshore vedlikehold kan delvis kompensere, men ~30% lavere volum er realistisk.</div>
+        </div>
+        <div class="assume">
+          <div class="assume-icon">💰</div>
+          <div class="assume-title">Kostnadsprofil</div>
+          <div class="assume-text">Lønnskostnad ~78% av omsetning. 2 nye ansatte +130–160k/mnd fast. Marginbedring gjennom volum.</div>
+        </div>
+        <div class="assume">
+          <div class="assume-icon">📈</div>
+          <div class="assume-title">Vekstkurve</div>
+          <div class="assume-text">Eksponentiell vekst avtar. Lineær vekst fra mars-nivå med sesongvariasjoner. Nye kunder gir stegvis økning.</div>
+        </div>
+        <div class="assume">
+          <div class="assume-icon">🔄</div>
+          <div class="assume-title">Westcon som base</div>
+          <div class="assume-text">Westcon holder ~1M+/mnd. Nye kunder (Gigante, KB, Trident, ZeonAqua) legger oppå. Diversifisering over tid.</div>
+        </div>
+        <div class="assume">
+          <div class="assume-icon">⚡</div>
+          <div class="assume-title">Rate 690 kr/t</div>
+          <div class="assume-text">Offshore-rate holdes stabil. Aqua/industri prises separat. Ingen prispress i prognoseperioden.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Risk analysis -->
+  <div class="panel fade d7">
+    <h2>Risikovurdering</h2>
+    <div class="risk">
+      <div class="risk-level high"></div>
+      <div class="risk-text"><strong>Kundekonsentrasjon:</strong> Westcon står for 76% av mars-omsetning. FSV, KB og Gigante diversifiserer, men Westcon er fortsatt ryggraden.</div>
+      <span class="risk-label high">Høy</span>
+    </div>
+    <div class="risk">
+      <div class="risk-level high"></div>
+      <div class="risk-text"><strong>Single point of failure:</strong> Isak driver salg, ops, plattform og admin alene. Sykdom eller utbrenthet stopper alt.</div>
+      <span class="risk-label high">Høy</span>
+    </div>
+    <div class="risk">
+      <div class="risk-level med"></div>
+      <div class="risk-text"><strong>Mannskapstilgang:</strong> Skalering krever tilgang på kvalifiserte elektrikere offshore. Flaskehals i rekruttering bremser vekst.</div>
+      <span class="risk-label med">Middels</span>
+    </div>
+    <div class="risk">
+      <div class="risk-level med"></div>
+      <div class="risk-text"><strong>Cashflow-timing:</strong> Factoring koster margin. Vekst binder kapital i lønn før fakturering. 2M factoring + 500k KK kan bli stramt.</div>
+      <span class="risk-label med">Middels</span>
+    </div>
+    <div class="risk">
+      <div class="risk-level low"></div>
+      <div class="risk-text"><strong>Markedsrisiko:</strong> Offshore og aqua er i vekst. Grønt skifte og havvind driver langsiktig etterspørsel.</div>
+      <span class="risk-label low">Lav</span>
+    </div>
+  </div>
+
+  <!-- Milestones -->
+  <div class="panel fade d8">
+    <h2>Milepæler første driftsår</h2>
+    <div style="display:grid;gap:8px;margin-top:12px">
+      <div class="milestone" style="border-left:3px solid var(--green)">
+        <div class="ms-num" style="color:var(--green)">✓</div>
+        <div><div class="ms-label">Første million</div><div class="ms-sub">Passert i feb — 1 082k på én måned</div></div>
+      </div>
+      <div class="milestone" style="border-left:3px solid var(--green)">
+        <div class="ms-num" style="color:var(--green)">✓</div>
+        <div><div class="ms-label">3 millioner kumulativt</div><div class="ms-sub">Passert i mars — 3 217k totalt</div></div>
+      </div>
+      <div class="milestone" style="border-left:3px solid var(--orange)">
+        <div class="ms-num">5M</div>
+        <div><div class="ms-label">5 millioner kumulativt</div><div class="ms-sub">Estimert mai/juni 2026</div></div>
+      </div>
+      <div class="milestone" style="border-left:3px solid var(--orange)">
+        <div class="ms-num">10M</div>
+        <div><div class="ms-label">10 millioner — første driftsår</div><div class="ms-sub">Estimert aug/sep 2026 (basisscenario)</div></div>
+      </div>
+      <div class="milestone" style="border-left:3px solid rgba(253,252,250,0.15)">
+        <div class="ms-num" style="font-size:18px;color:rgba(253,252,250,0.5)">1.5M+</div>
+        <div><div class="ms-label">Kumulativt årsresultat</div><div class="ms-sub">Basert på ~15% gjennomsnittlig nettmargin H2</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom line -->
+  <div class="panel fade d9" style="border:1px solid rgba(45,138,86,0.2);background:rgba(45,138,86,0.05)">
+    <h2 style="color:var(--green)">Bunnlinje</h2>
+    <p style="font-size:13px;line-height:1.8;color:rgba(253,252,250,0.7)">
+      Bluecrew har bevist forretningsmodellen på 5 måneder. 3.2M i omsetning fra 30k i startkapital er eksepsjonelt.
+      Mars viser diversifisering — 4 kunder mot 1 i februar. Basisscenarioet på ~11M i
+      første driftsår krever at mars-nivået holdes, at salgsleder lander nye kunder, og at sommerdip-en
+      håndteres. Største risiko er fortsatt at alt hviler på én person. De to ansettelsene
+      er ikke en luksusbeslutning — de er en forutsetning for at veksten ikke dreper selskapet.
+    </p>
+  </div>
+
+  <div class="footer">Bluecrew AS · Prognose generert 8. mars 2026 · Basert på Tripletex-regnskap + bekreftede bestillinger · Ikke revisorbekreftet</div>
+</div>
+
+<script>
+const C={navy800:'#172a5c',navy600:'#1e3d94',gold400:'#bfa77d',gold500:'#a08563',cream:'#fdfcfa',
+  green:'#2d8a56',red:'#c0392b',orange:'#e67e22',blue:'#3498db'};
+Chart.defaults.color='rgba(253,252,250,0.5)';
+Chart.defaults.font.family="'Inter',sans-serif";
+
+const months=['Okt','Nov','Des','Jan','Feb','Mar*','Apr','Mai','Jun','Jul','Aug','Sep'];
+// Actual + estimated
+const actual=[0,64083,181403,405952,1081711];
+const est=[1483520,1200000,1350000,1400000,1000000,1300000,1500000];
+const allRev=[...actual,...est];
+// Scenarios
+const conservative=[0,64083,181403,405952,1081711,1483520,1000000,1100000,1150000,850000,1000000,1200000];
+const base=allRev;
+const optimistic=[0,64083,181403,405952,1081711,1483520,1400000,1600000,1800000,1200000,1600000,2000000];
+
+const cumBase=[]; let cb=0; base.forEach(v=>{cb+=v;cumBase.push(cb)});
+const cumCon=[]; let cc=0; conservative.forEach(v=>{cc+=v;cumCon.push(cc)});
+const cumOpt=[]; let co=0; optimistic.forEach(v=>{co+=v;cumOpt.push(co)});
+
+let mainChart;
+const ctx=document.getElementById('forecastChart').getContext('2d');
+
+const opts={
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{labels:{padding:16,usePointStyle:true,pointStyleWidth:10,font:{size:11}}},
+    tooltip:{backgroundColor:C.navy800,borderColor:C.gold500,borderWidth:1, mode:'index', intersect:false,
+      callbacks:{label:c=>`${c.dataset.label}: ${new Intl.NumberFormat('nb-NO').format(Math.round(c.raw))} kr`}}},
+  scales:{x:{grid:{display:false},ticks:{font:{size:11}}},
+    y:{grid:{color:'rgba(253,252,250,0.04)'},ticks:{font:{size:11},
+      callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?Math.round(v/1e3)+'k':v}}}
+};
+
+function makeMonthly(){
+  return new Chart(ctx,{type:'bar',data:{labels:months,datasets:[
+    {label:'Konservativ',data:conservative,backgroundColor:'rgba(52,152,219,0.25)',borderColor:C.blue,borderWidth:1,borderRadius:4,maxBarThickness:32},
+    {label:'Basisscenario',data:base,backgroundColor:base.map((_,i)=>i<5?C.navy600:i===5?C.orange:'rgba(45,138,86,0.4)'),
+      borderRadius:6,maxBarThickness:32},
+    {label:'Offensiv',data:optimistic,backgroundColor:'rgba(230,126,34,0.2)',borderColor:C.orange,borderWidth:1,borderRadius:4,maxBarThickness:32}
+  ]},options:opts});
+}
+function makeCumulative(){
+  return new Chart(ctx,{type:'line',data:{labels:months,datasets:[
+    {label:'Konservativ',data:cumCon,borderColor:C.blue,backgroundColor:'transparent',borderWidth:2,borderDash:[6,3],
+      tension:.3,pointRadius:3,pointBackgroundColor:C.blue},
+    {label:'Basisscenario',data:cumBase,borderColor:C.green,backgroundColor:'rgba(45,138,86,0.08)',fill:true,borderWidth:2.5,
+      tension:.3,pointRadius:4,pointBackgroundColor:C.green},
+    {label:'Offensiv',data:cumOpt,borderColor:C.orange,backgroundColor:'transparent',borderWidth:2,borderDash:[6,3],
+      tension:.3,pointRadius:3,pointBackgroundColor:C.orange}
+  ]},options:opts});
+}
+
+mainChart=makeMonthly();
+
+function switchMain(t){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  mainChart.destroy();
+  if(t==='monthly') mainChart=makeMonthly();
+  else mainChart=makeCumulative();
+}
+</script>
+</body>
+</html>
