@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bluecrew — Interne verktøy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-800: #172a5c;
+  --navy-700: #1a3278;
+  --navy-600: #1e3d8f;
+  --gold-500: #a08563;
+  --gold-400: #bfa77d;
+  --gold-300: #d4c4a0;
+  --cream-50: #fdfcfa;
+  --cream-100: #faf6f0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: var(--cream-50);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-weight: 300;
+  color: var(--navy-800);
+}
+
+/* Header */
+.header {
+  background: var(--navy-800);
+  position: relative;
+  overflow: hidden;
+}
+
+.header-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 600px 400px at 85% 20%, rgba(26,50,120,0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 10% 80%, rgba(160,133,99,0.08) 0%, transparent 70%);
+}
+
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 32px 52px;
+  position: relative;
+  z-index: 1;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.logo {
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold-400);
+  font-weight: 500;
+}
+
+.header-badge {
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold-400);
+  border: 1px solid rgba(191,167,125,0.25);
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-weight: 400;
+}
+
+.header-title {
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--cream-50);
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+
+.header-sub {
+  font-size: 15px;
+  color: rgba(191,167,125,0.7);
+  font-weight: 300;
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+/* Stats bar */
+.stats-bar {
+  background: white;
+  border-bottom: 1px solid #e8e3dc;
+  padding: 0 32px;
+}
+
+.stats-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0;
+}
+
+.stat-item {
+  padding: 20px 28px 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--navy-800);
+  position: relative;
+}
+
+.stat-item + .stat-item {
+  padding-left: 28px;
+}
+
+.stat-item + .stat-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background: #e0dbd4;
+}
+
+.stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.stat-icon.navy { background: rgba(23,42,92,0.08); }
+.stat-icon.gold { background: rgba(160,133,99,0.1); }
+.stat-icon.green { background: rgba(22,163,74,0.08); }
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--navy-800);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--gold-500);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+/* Main */
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+.section-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+/* Tool grid */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.tool-card {
+  background: white;
+  border: 1px solid #e8e3dc;
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-decoration: none;
+  color: var(--navy-800);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.tool-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-500), var(--gold-400));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tool-card:hover {
+  border-color: var(--gold-400);
+  box-shadow: 0 8px 32px rgba(23,42,92,0.08);
+  transform: translateY(-2px);
+}
+
+.tool-card:hover::after { opacity: 1; }
+
+.tool-card.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.tool-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.tool-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  background: rgba(23,42,92,0.05);
+}
+
+.tool-badge {
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+
+.tool-badge.live {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.tool-badge.wip {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.tool-badge.planned {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.tool-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.tool-desc {
+  font-size: 13px;
+  color: rgba(23,42,92,0.6);
+  font-weight: 300;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.tool-ref {
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--gold-500);
+  font-weight: 400;
+  padding-top: 12px;
+  border-top: 1px solid #f0ebe3;
+}
+
+/* Quick links */
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.quick-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: white;
+  border: 1px solid #e8e3dc;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--navy-800);
+  font-size: 13px;
+  font-weight: 400;
+  transition: all 0.2s;
+}
+
+.quick-link:hover {
+  border-color: var(--gold-400);
+  background: var(--cream-100);
+}
+
+.quick-link-icon { font-size: 16px; flex-shrink: 0; }
+
+/* Footer */
+.footer {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 32px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(23,42,92,0.35);
+  font-weight: 300;
+}
+
+/* Animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeIn 0.6s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tool-grid { grid-template-columns: 1fr; }
+  .quick-links { grid-template-columns: repeat(2, 1fr); }
+  .stats-inner { flex-wrap: wrap; }
+  .stat-item + .stat-item::before { display: none; }
+  .header-inner { padding: 32px 20px 36px; }
+  .header-title { font-size: 26px; }
+  .main { padding: 28px 20px 60px; }
+}
+
+@media (max-width: 480px) {
+  .quick-links { grid-template-columns: 1fr; }
+  .header-top { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-bg"></div>
+  <div class="header-inner fade-in">
+    <div class="header-top">
+      <div class="logo">Bluecrew</div>
+      <div class="header-badge">Interne verktøy</div>
+    </div>
+    <h1 class="header-title">Toolbox</h1>
+    <p class="header-sub">Operasjonelle verktøy for teamet. Sjekklister, kalkulatorer og prosess-støtte — alt på ett sted.</p>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stats-inner fade-in" style="animation-delay: 0.1s;">
+    <div class="stat-item">
+      <div class="stat-icon navy">📋</div>
+      <div>
+        <div class="stat-value">9</div>
+        <div class="stat-label">Prosedyrer (PRO)</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon green">✓</div>
+      <div>
+        <div class="stat-value">7</div>
+        <div class="stat-label">Tools live</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon gold">🔨</div>
+      <div>
+        <div class="stat-value">4</div>
+        <div class="stat-label">Planlagt</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="section-label fade-in" style="animation-delay: 0.15s;">Verktøy</div>
+
+  <div class="tool-grid fade-in" style="animation-delay: 0.2s;">
+
+    <a href="onboarding.html" class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon">🚀</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-title">Onboarding — Generell</div>
+      <div class="tool-desc">Faseinndelt onboarding for interne ansatte. Rollevalg, avkryssing og progress-tracking.</div>
+      <div class="tool-ref">Salg · Koordinator · Admin · Leder</div>
+    </a>
+
+    <a href="onboarding-steffen.html" class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon">📊</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-title">Onboarding — Steffen Eslinger</div>
+      <div class="tool-desc">BDM onboarding med KPI-er, prismatrise, provisjonsmodell og ramp-up plan. Tiltredelse 17. mars.</div>
+      <div class="tool-ref">BDM · Salg · Prøvetid 6 mnd</div>
+    </a>
+
+    <a href="onboarding-koordinator.html" class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon">🔗</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-title">Onboarding — Therese Carleton</div>
+      <div class="tool-desc">Koordinator-onboarding: kandidatflyt, rotasjonsplanlegging, AdminCrew, timelister.</div>
+      <div class="tool-ref">Koordinering · Bemanningskoordinator</div>
+    </a>
+
+    <a href="priskalkulator.html" class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon">💰</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-title">Priskalkulator</div>
+      <div class="tool-desc">Beregn dagspris/timepris per segment med full kostnadskalkyle, margin og likebehandling.</div>
+      <div class="tool-ref">PRO-03 · PRO-06 · Havbruk · Offshore · Industri</div>
+    </a>
+
+    <a href="prognose.html" class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon">📈</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-title">Prognose 2026</div>
+      <div class="tool-desc">Omsetnings- og resultatprognose for Bluecrew 2026 med scenariomodellering.</div>
+      <div class="tool-ref">Økonomi · Budsjett · Planlegging</div>
+    </a>
+
+    <a href="resultat.html" class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon">📉</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-title">Resultat mars</div>
+      <div class="tool-desc">Faktisk resultat og økonomisk oversikt for mars 2026.</div>
+      <div class="tool-ref">Økonomi · Regnskap · Rapportering</div>
+    </a>
+
+    <div class="tool-card disabled">
+      <div class="tool-header">
+        <div class="tool-icon">✅</div>
+        <span class="tool-badge planned">Planlagt</span>
+      </div>
+      <div class="tool-title">Frislipp-sjekkliste</div>
+      <div class="tool-desc">Sjekkliste før kandidat sendes på oppdrag. Sertifikater, kontrakter, reise — alt må på plass.</div>
+      <div class="tool-ref">PRO-02 · PRO-05</div>
+    </div>
+
+    <div class="tool-card disabled">
+      <div class="tool-header">
+        <div class="tool-icon">⚠️</div>
+        <span class="tool-badge planned">Planlagt</span>
+      </div>
+      <div class="tool-title">Avviksregistrering</div>
+      <div class="tool-desc">Registrer og klassifiser avvik. 5 Whys rotårsaksanalyse og CAPA-tiltak.</div>
+      <div class="tool-ref">PRO-04 · ISO 10.2</div>
+    </div>
+
+    <div class="tool-card disabled">
+      <div class="tool-header">
+        <div class="tool-icon">📜</div>
+        <span class="tool-badge planned">Planlagt</span>
+      </div>
+      <div class="tool-title">Sertifikat-tracker</div>
+      <div class="tool-desc">Oversikt over utløpsdatoer med 90/60/30/14-dagers varsler per kandidat.</div>
+      <div class="tool-ref">PRO-05</div>
+    </div>
+
+    <div class="tool-card disabled">
+      <div class="tool-header">
+        <div class="tool-icon">👤</div>
+        <span class="tool-badge planned">Planlagt</span>
+      </div>
+      <div class="tool-title">Kandidat Inn</div>
+      <div class="tool-desc">Steg-for-steg verifisering av ny kandidat. Dokumenter, sertifikater, referanser.</div>
+      <div class="tool-ref">PRO-01</div>
+    </div>
+
+  </div>
+
+  <div class="section-label fade-in" style="animation-delay: 0.3s;">Hurtiglenker</div>
+
+  <div class="quick-links fade-in" style="animation-delay: 0.35s;">
+    <a href="https://app.hubspot.com" target="_blank" class="quick-link">
+      <span class="quick-link-icon">📊</span> HubSpot CRM
+    </a>
+    <a href="https://tripletex.no" target="_blank" class="quick-link">
+      <span class="quick-link-icon">📒</span> Tripletex
+    </a>
+    <a href="https://admincrew.no" target="_blank" class="quick-link">
+      <span class="quick-link-icon">⚙️</span> AdminCrew
+    </a>
+    <a href="https://bluecrew.no" target="_blank" class="quick-link">
+      <span class="quick-link-icon">🌐</span> bluecrew.no
+    </a>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span>Bluecrew AS · Ervikveien 110, 9402 Harstad · Org.nr. 936 463 843</span>
+  <span>Intern bruk</span>
+</div>
+
+</body>
+</html>

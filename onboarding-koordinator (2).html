@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding — Bemanningskoordinator — Bluecrew</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-800: #172a5c;
+  --navy-700: #1a3278;
+  --gold-500: #a08563;
+  --gold-400: #bfa77d;
+  --cream-50: #fdfcfa;
+  --cream-100: #faf6f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background: linear-gradient(165deg, var(--cream-50) 0%, var(--cream-100) 40%, #f0ebe3 100%);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-weight: 300;
+  color: var(--navy-800);
+}
+.header { background: var(--navy-800); padding: 32px 40px; position: relative; overflow: hidden; }
+.header::after { content:''; position:absolute; top:-50%; right:-10%; width:300px; height:300px; background:radial-gradient(circle,rgba(26,50,120,0.27) 0%,transparent 70%); border-radius:50%; }
+.header-inner { max-width:800px; margin:0 auto; position:relative; z-index:1; }
+.back-link { display:inline-flex; align-items:center; gap:6px; color:rgba(191,167,125,0.7); text-decoration:none; font-size:12px; font-weight:400; margin-bottom:12px; transition:color 0.2s; }
+.back-link:hover { color:var(--gold-400); }
+.logo-text { font-size:13px; letter-spacing:4px; text-transform:uppercase; color:var(--gold-400); font-weight:500; margin-bottom:8px; }
+.title { font-size:28px; font-weight:500; color:var(--cream-50); letter-spacing:-0.5px; }
+.subtitle { font-size:14px; color:rgba(191,167,125,0.7); margin-top:6px; font-weight:300; }
+.main { max-width:800px; margin:0 auto; padding:32px 24px 80px; }
+
+.info-card { background:white; border:1px solid #e8e3dc; border-radius:14px; padding:24px; margin-bottom:24px; display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; }
+.info-item { font-size:13px; }
+.info-label { color:var(--gold-500); font-weight:400; font-size:11px; letter-spacing:0.5px; text-transform:uppercase; }
+.info-value { font-weight:400; margin-top:2px; }
+
+.principles { background:var(--navy-800); border-radius:14px; padding:24px; margin-bottom:28px; color:var(--cream-50); }
+.principles-title { font-size:14px; font-weight:500; color:var(--gold-400); margin-bottom:12px; }
+.principle { font-size:13px; font-weight:300; line-height:1.6; margin-bottom:6px; color:rgba(253,252,250,0.8); }
+.principle strong { font-weight:400; color:var(--cream-50); }
+
+.input-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+.input-group label { display:block; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--gold-500); font-weight:500; margin-bottom:6px; }
+.input-group input { width:100%; padding:10px 14px; border:1.5px solid #e0dbd4; border-radius:8px; font-family:'Inter',sans-serif; font-size:14px; font-weight:300; color:var(--navy-800); background:white; outline:none; transition:border-color 0.2s; }
+.input-group input:focus { border-color:var(--navy-700); }
+
+.progress-bar { background:#e8e3dc; border-radius:100px; height:6px; margin-bottom:8px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:100px; background:linear-gradient(90deg,var(--gold-500),var(--gold-400)); transition:width 0.5s cubic-bezier(0.4,0,0.2,1); width:0%; }
+.progress-text { font-size:12px; color:var(--gold-500); font-weight:400; margin-bottom:28px; display:flex; justify-content:space-between; }
+
+.phase { margin-bottom:16px; border-radius:14px; background:white; border:1px solid #e8e3dc; overflow:hidden; transition:box-shadow 0.3s; }
+.phase:hover { box-shadow:0 2px 16px rgba(23,42,92,0.06); }
+.phase-header { padding:18px 22px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
+.phase-left { display:flex; align-items:center; gap:14px; }
+.phase-icon { font-size:22px; }
+.phase-title { font-size:16px; font-weight:500; }
+.phase-sub { font-size:12px; color:var(--gold-500); font-weight:300; margin-top:1px; }
+.phase-right { display:flex; align-items:center; gap:12px; }
+.phase-count { font-size:12px; color:rgba(23,42,92,0.53); font-weight:400; background:var(--cream-100); padding:4px 10px; border-radius:100px; }
+.phase-check { color:#16a34a; font-size:16px; display:none; }
+.phase-check.show { display:inline; }
+.chevron { width:20px; height:20px; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); color:var(--navy-800); }
+.chevron.open { transform:rotate(180deg); }
+.tasks { padding:0 22px 18px; display:none; }
+.tasks.open { display:block; }
+.task { display:flex; gap:14px; padding:14px 0; border-top:1px solid #f0ebe3; align-items:flex-start; transition:opacity 0.3s; }
+.task.done { opacity:0.5; }
+.checkbox { width:22px; height:22px; border-radius:6px; border:1.5px solid #d0cbc4; flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; background:white; margin-top:1px; }
+.checkbox.checked { background:var(--navy-800); border-color:var(--navy-800); }
+.checkbox.checked svg { display:block; }
+.checkbox svg { display:none; }
+.checkbox:hover { border-color:var(--gold-500); }
+.task-content { flex:1; min-width:0; }
+.task-text { font-size:14px; font-weight:400; color:var(--navy-800); line-height:1.5; }
+.task.done .task-text { text-decoration:line-through; color:rgba(23,42,92,0.4); }
+.task-meta { display:flex; gap:16px; margin-top:5px; flex-wrap:wrap; }
+.task-tag { font-size:11px; font-weight:400; color:rgba(23,42,92,0.53); display:flex; align-items:center; gap:4px; }
+.task-tag span { color:var(--gold-500); }
+
+.kpi-section { background:white; border:1px solid #e8e3dc; border-radius:14px; padding:24px; margin-top:28px; }
+.kpi-title { font-size:14px; font-weight:500; margin-bottom:16px; }
+.kpi-item { font-size:13px; font-weight:300; line-height:1.7; padding-left:16px; position:relative; color:rgba(23,42,92,0.7); }
+.kpi-item::before { content:'→'; position:absolute; left:0; color:var(--gold-500); }
+
+.milestones { margin-top:24px; }
+.milestone { display:flex; gap:14px; margin-bottom:12px; }
+.milestone-week { font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--gold-500); min-width:50px; padding-top:2px; }
+.milestone-text { font-size:13px; font-weight:300; line-height:1.5; color:rgba(23,42,92,0.7); }
+
+.complete-banner { background:linear-gradient(135deg,var(--navy-800),var(--navy-700)); color:var(--cream-50); padding:24px; border-radius:14px; text-align:center; margin-bottom:24px; display:none; }
+.complete-banner.show { display:block; }
+.complete-banner h3 { font-weight:500; font-size:18px; margin-bottom:4px; color:var(--gold-400); }
+.complete-banner p { font-size:14px; font-weight:300; color:rgba(253,252,250,0.8); }
+
+.fade-in { opacity:0; transform:translateY(12px); animation:fadeIn 0.5s forwards; }
+@keyframes fadeIn { to { opacity:1; transform:translateY(0); } }
+
+@media (max-width:600px) {
+  .header { padding:24px 20px; }
+  .main { padding:24px 16px 60px; }
+  .title { font-size:22px; }
+  .info-card { grid-template-columns:1fr; }
+  .input-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← Tilbake til Toolbox</a>
+    <div class="logo-text">Bluecrew</div>
+    <div class="title">Onboarding — Therese Carleton</div>
+    <div class="subtitle">Bemanningskoordinator · Fast 100% stilling · Operativ koordinering av kandidater og bemanning</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="info-card fade-in">
+    <div class="info-item"><div class="info-label">Navn</div><div class="info-value">Therese Carleton</div></div>
+    <div class="info-item"><div class="info-label">Stilling</div><div class="info-value">Bemanningskoordinator</div></div>
+    <div class="info-item"><div class="info-label">Ansettelsesform</div><div class="info-value">Fast 100%</div></div>
+    <div class="info-item"><div class="info-label">Arbeidssted</div><div class="info-value">Fleksibelt (remote/hybrid)</div></div>
+    <div class="info-item"><div class="info-label">Nærmeste leder</div><div class="info-value">Daglig leder (Isak Leo Didriksson)</div></div>
+    <div class="info-item"><div class="info-label">Samarbeider med</div><div class="info-value">BDM og CEO</div></div>
+  </div>
+
+  <div class="principles fade-in" style="animation-delay:0.1s;">
+    <div class="principles-title">Bluecrew-prinsipper for koordinering</div>
+    <div class="principle"><strong>Proaktivitet:</strong> Identifiser problemer før de oppstår. Ring før du venter.</div>
+    <div class="principle"><strong>Ro under press:</strong> Det blir hektisk. Vær den som skaper orden.</div>
+    <div class="principle"><strong>Mannskapsfokus:</strong> Bygg tillit med kandidatene. De er vår viktigste ressurs.</div>
+    <div class="principle"><strong>Dokumentasjon:</strong> Logg alt. Avvik, bytter, tilbakemeldinger.</div>
+    <div class="principle"><strong>Kvalitet:</strong> Riktig person, riktig sted, riktig tid. Ingen snarveier.</div>
+  </div>
+
+
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="progress-text">
+    <span id="progress-label">0 av 0 oppgaver fullført</span>
+    <span id="progress-pct">0%</span>
+  </div>
+
+  <div class="complete-banner" id="complete-banner">
+    <h3>Onboarding fullført ✓</h3>
+    <p id="complete-text">Therese er klar for selvstendig drift. Velkommen til Bluecrew.</p>
+  </div>
+
+  <div id="phases-container"></div>
+
+  <div class="kpi-section fade-in" style="animation-delay:0.4s;">
+    <div class="kpi-title">KPI-er første måned</div>
+    <div class="kpi-item">Alle aktive kandidater fulgt opp innen 24 timer etter statusendring</div>
+    <div class="kpi-item">Dokumentasjon komplett før oppstart hos kunde (kontrakt, sertifikater, personalskjema)</div>
+    <div class="kpi-item">Rotasjonsplan oppdatert og kommunisert til kunde og mannskap</div>
+    <div class="kpi-item">Erstatning ved akuttfravær iverksatt innen 30 minutter</div>
+    <div class="kpi-item">Daglig statusrapport i Slack #koordinering</div>
+    <div class="kpi-item">Alle timelister kvalitetssikret før lønnskjøring (den 20.)</div>
+    <div class="kpi-item">Null urapporterte avvik</div>
+
+    <div class="milestones">
+      <div style="font-size:14px;font-weight:500;margin-bottom:14px;margin-top:20px;">Milepæler første måned</div>
+      <div class="milestone"><div class="milestone-week">Uke 1</div><div class="milestone-text">Forstå flyten. Kunne forklare kandidatreisen fra A til Å. Bli kjent med systemtilgangene.</div></div>
+      <div class="milestone"><div class="milestone-week">Uke 2</div><div class="milestone-text">Selvstendig kandidatoppfølging og intervjuer. Første rotasjon planlagt. Daglige rutiner mestret.</div></div>
+      <div class="milestone"><div class="milestone-week">Uke 3</div><div class="milestone-text">Selvstendig på kandidater og spotting av hull i turnus. Løpende kundedialog, og passivt salg.</div></div>
+      <div class="milestone"><div class="milestone-week">Uke 4</div><div class="milestone-text">Full selvstendig drift. Statusmøte med Isak. Forbedringsforslag levert.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const PHASES = [
+  {
+    id: 'pre', title: 'Før oppstart', subtitle: 'Før dag 1', icon: '📦',
+    tasks: [
+      { id:'k01', text:'Arbeidskontrakt signert (fast 100%)', ansvarlig:'Isak', frist:'Før dag 1' },
+      { id:'k02', text:'Google Workspace-konto (@bluecrew.no)', ansvarlig:'Isak', frist:'Før dag 1' },
+      { id:'k03', text:'Slack-invitasjon + kanaler: #koordinering, #general, #mannskap, #kunder', ansvarlig:'Isak', frist:'Før dag 1' },
+      { id:'k04', text:'AdminCrew-tilgang (kandidatprofiler, oppdrag, kontrakter, timelister)', ansvarlig:'Isak', frist:'Før dag 1' },
+      { id:'k05', text:'Tripletex brukertilgang (timeføring, lønn)', ansvarlig:'Isak', frist:'Før dag 1' },
+      { id:'k06', text:'Tilgang til kandidatdatabase og kontaktlister', ansvarlig:'Isak', frist:'Før dag 1' },
+      { id:'k07', text:'PC/telefon klargjort', ansvarlig:'Isak', frist:'Før dag 1' },
+      { id:'k08', text:'E-postsignatur etter Bluecrew brand kit', ansvarlig:'Isak', frist:'Før dag 1' }
+    ]
+  },
+  {
+    id: 'dag1', title: 'Dag 1', subtitle: 'Velkomst og systeminnføring', icon: '🚀',
+    tasks: [
+      { id:'k09', text:'Velkomstsamtale med Isak – rolle, forventninger, arbeidstid', ansvarlig:'Isak', frist:'Dag 1' },
+      { id:'k10', text:'Intro til Bluecrew-verdier: pålitelighet, operativitet, kvalitet', ansvarlig:'Isak', frist:'Dag 1' },
+      { id:'k11', text:'Gjennomgang av daglig koordineringsflyt fra A til Å', ansvarlig:'Isak', frist:'Dag 1' },
+      { id:'k12', text:'Oversikt over aktive oppdrag, klienter og mannskap', ansvarlig:'Isak', frist:'Dag 1' },
+      { id:'k13', text:'AdminCrew-demo: kandidatprofiler, oppdragstildeling, dokumentasjon, timelister', ansvarlig:'Isak', frist:'Dag 1' },
+      { id:'k14', text:'Kommunikasjonsrutiner: SMS, telefon, Slack-kanaler, e-post mot kunder', ansvarlig:'Isak', frist:'Dag 1' },
+      { id:'k15', text:'Gjennomgang av kandidatflyten: første kontakt → intervju → ref.sjekk → oppstart', ansvarlig:'Isak', frist:'Dag 1' },
+      { id:'k16', text:'Intro til rotasjonsplanlegging og bemanningsmatrise', ansvarlig:'Isak', frist:'Dag 1' }
+    ]
+  },
+  {
+    id: 'uke1', title: 'Uke 1', subtitle: 'Skygging og læring', icon: '📅',
+    tasks: [
+      { id:'k17', text:'Skygging i 2–3 fulle arbeidsdager (observere hele koordineringsflyten)', ansvarlig:'Isak', frist:'Dag 2–4' },
+      { id:'k18', text:'Gjennomføre første kandidatintervju med støtte', ansvarlig:'Isak', frist:'Dag 2–3' },
+      { id:'k19', text:'Referansesjekk-rutine: hvem, hvordan, mal', ansvarlig:'Isak', frist:'Dag 3' },
+      { id:'k20', text:'HMS-rutiner: sertifikatkrav per oppdragstype, avviksrapportering, egenmeldingsskjema', ansvarlig:'Isak', frist:'Dag 3–4' },
+      { id:'k21', text:'Kontrakts- og dokumentasjonsrutine: personalskjema, oppdragsbekreftelse, AML-track', ansvarlig:'Isak', frist:'Dag 4' },
+      { id:'k22', text:'Timelistesystem: korrekt føring, kvalitetssikring før lønnskjøring (den 20.)', ansvarlig:'Isak', frist:'Dag 4' },
+      { id:'k23', text:'Reise- og logistikkkoordinering for mannskap', ansvarlig:'Isak', frist:'Dag 5' },
+      { id:'k24', text:'Første selvstendige oppgave (med backup tilgjengelig)', ansvarlig:'Koordinator', frist:'Dag 5' },
+      { id:'k25', text:'Oppsummering uke 1 – tilbakemelding og spørsmål', ansvarlig:'Isak', frist:'Dag 5' }
+    ]
+  },
+  {
+    id: 'drift', title: 'Uke 2–4', subtitle: 'Selvstendig drift', icon: '🎯',
+    tasks: [
+      { id:'k26', text:'Selvstendig kandidatoppfølging (backup tilgjengelig)', ansvarlig:'Koordinator', frist:'Uke 2+' },
+      { id:'k27', text:'Gjennomføre intervjuer og referansesjekk selvstendig', ansvarlig:'Koordinator', frist:'Uke 2–3' },
+      { id:'k28', text:'Håndtere første sykefravær-erstatning / akuttbemanning selvstendig', ansvarlig:'Koordinator', frist:'Uke 2–3' },
+      { id:'k29', text:'Planlegge rotasjon for minst 2 kunder selvstendig', ansvarlig:'Koordinator', frist:'Uke 3' },
+      { id:'k30', text:'Bygge relasjoner med mannskap: navn, sertifikater, preferanser, tilgjengelighet', ansvarlig:'Koordinator', frist:'Løpende' },
+      { id:'k31', text:'Løpende dialog med kunder om bemanningsbehov og tilfredshet', ansvarlig:'Koordinator', frist:'Løpende' },
+      { id:'k32', text:'Daglig statusrapport i Slack #koordinering', ansvarlig:'Koordinator', frist:'Daglig' },
+      { id:'k33', text:'Delta i ukentlig driftsmøte', ansvarlig:'Isak', frist:'Ukentlig' },
+      { id:'k34', text:'Første statusmøte med Isak – evaluering av rutiner og arbeidsflyt', ansvarlig:'Isak', frist:'Uke 4' },
+      { id:'k35', text:'Identifisere forbedringspotensial i koordineringsflyten', ansvarlig:'Koordinator', frist:'Uke 4' }
+    ]
+  }
+];
+
+let checkedState = {};
+let openPhases = { pre: true };
+
+function togglePhase(phaseId) {
+  openPhases[phaseId] = !openPhases[phaseId];
+  document.getElementById('tasks-' + phaseId).classList.toggle('open', !!openPhases[phaseId]);
+  document.getElementById('chevron-' + phaseId).classList.toggle('open', !!openPhases[phaseId]);
+}
+
+function toggleCheck(taskId) {
+  checkedState[taskId] = !checkedState[taskId];
+  document.getElementById('task-' + taskId).classList.toggle('done', !!checkedState[taskId]);
+  document.getElementById('cb-' + taskId).classList.toggle('checked', !!checkedState[taskId]);
+  updateProgress();
+}
+
+function updateProgress() {
+  let total = 0, done = 0;
+  PHASES.forEach(phase => {
+    total += phase.tasks.length;
+    const pd = phase.tasks.filter(t => checkedState[t.id]).length;
+    done += pd;
+    const c = document.getElementById('count-' + phase.id);
+    const ch = document.getElementById('phasecheck-' + phase.id);
+    if (c) c.textContent = pd + '/' + phase.tasks.length;
+    if (ch) ch.classList.toggle('show', pd === phase.tasks.length);
+  });
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = done + ' av ' + total + ' oppgaver fullført';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('complete-banner').classList.toggle('show', pct === 100 && total > 0);
+}
+
+function renderPhases() {
+  const container = document.getElementById('phases-container');
+  container.innerHTML = '';
+  PHASES.forEach((phase, pi) => {
+    const isOpen = !!openPhases[phase.id];
+    const pd = phase.tasks.filter(t => checkedState[t.id]).length;
+    let tasksHtml = '';
+    phase.tasks.forEach(task => {
+      const isDone = !!checkedState[task.id];
+      tasksHtml += `<div class="task ${isDone ? 'done' : ''}" id="task-${task.id}">
+        <div class="checkbox ${isDone ? 'checked' : ''}" id="cb-${task.id}" onclick="toggleCheck('${task.id}')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="var(--gold-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="task-content">
+          <div class="task-text">${task.text}</div>
+          <div class="task-meta">
+            <div class="task-tag"><span>→</span> ${task.ansvarlig}</div>
+            <div class="task-tag"><span>⏱</span> ${task.frist}</div>
+          </div>
+        </div>
+      </div>`;
+    });
+    const el = document.createElement('div');
+    el.className = 'phase fade-in';
+    el.style.animationDelay = (0.15 + pi * 0.08) + 's';
+    el.innerHTML = `
+      <div class="phase-header" onclick="togglePhase('${phase.id}')">
+        <div class="phase-left"><span class="phase-icon">${phase.icon}</span><div><div class="phase-title">${phase.title}</div><div class="phase-sub">${phase.subtitle}</div></div></div>
+        <div class="phase-right">
+          <span class="phase-count" id="count-${phase.id}">${pd}/${phase.tasks.length}</span>
+          <span class="phase-check" id="phasecheck-${phase.id}">✓</span>
+          <svg class="chevron ${isOpen ? 'open' : ''}" id="chevron-${phase.id}" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+      <div class="tasks ${isOpen ? 'open' : ''}" id="tasks-${phase.id}">${tasksHtml}</div>`;
+    container.appendChild(el);
+  });
+}
+
+renderPhases();
+updateProgress();
+</script>
+</body>
+</html>

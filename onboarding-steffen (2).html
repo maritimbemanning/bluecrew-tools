@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding — Steffen Eslinger, BDM — Bluecrew</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-800: #172a5c;
+  --navy-700: #1a3278;
+  --gold-500: #a08563;
+  --gold-400: #bfa77d;
+  --cream-50: #fdfcfa;
+  --cream-100: #faf6f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background: linear-gradient(165deg, var(--cream-50) 0%, var(--cream-100) 40%, #f0ebe3 100%);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-weight: 300;
+  color: var(--navy-800);
+}
+.header { background: var(--navy-800); padding: 32px 40px; position: relative; overflow: hidden; }
+.header::after { content:''; position:absolute; top:-50%; right:-10%; width:300px; height:300px; background:radial-gradient(circle,rgba(26,50,120,0.27) 0%,transparent 70%); border-radius:50%; }
+.header-inner { max-width:800px; margin:0 auto; position:relative; z-index:1; }
+.back-link { display:inline-flex; align-items:center; gap:6px; color:rgba(191,167,125,0.7); text-decoration:none; font-size:12px; font-weight:400; margin-bottom:12px; transition:color 0.2s; }
+.back-link:hover { color:var(--gold-400); }
+.logo-text { font-size:13px; letter-spacing:4px; text-transform:uppercase; color:var(--gold-400); font-weight:500; margin-bottom:8px; }
+.title { font-size:28px; font-weight:500; color:var(--cream-50); letter-spacing:-0.5px; }
+.subtitle { font-size:14px; color:rgba(191,167,125,0.7); margin-top:6px; font-weight:300; }
+.main { max-width:800px; margin:0 auto; padding:32px 24px 80px; }
+
+.info-card { background:white; border:1px solid #e8e3dc; border-radius:14px; padding:24px; margin-bottom:24px; display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; }
+.info-item { font-size:13px; }
+.info-label { color:var(--gold-500); font-weight:400; font-size:11px; letter-spacing:0.5px; text-transform:uppercase; }
+.info-value { font-weight:400; margin-top:2px; }
+
+.principles { background:var(--navy-800); border-radius:14px; padding:24px; margin-bottom:28px; color:var(--cream-50); }
+.principles-title { font-size:14px; font-weight:500; color:var(--gold-400); margin-bottom:12px; }
+.principle { font-size:13px; font-weight:300; line-height:1.6; margin-bottom:6px; color:rgba(253,252,250,0.8); }
+.principle strong { font-weight:400; color:var(--cream-50); }
+
+.progress-bar { background:#e8e3dc; border-radius:100px; height:6px; margin-bottom:8px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:100px; background:linear-gradient(90deg,var(--gold-500),var(--gold-400)); transition:width 0.5s cubic-bezier(0.4,0,0.2,1); width:0%; }
+.progress-text { font-size:12px; color:var(--gold-500); font-weight:400; margin-bottom:28px; display:flex; justify-content:space-between; }
+
+.phase { margin-bottom:16px; border-radius:14px; background:white; border:1px solid #e8e3dc; overflow:hidden; transition:box-shadow 0.3s; }
+.phase:hover { box-shadow:0 2px 16px rgba(23,42,92,0.06); }
+.phase-header { padding:18px 22px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
+.phase-left { display:flex; align-items:center; gap:14px; }
+.phase-icon { font-size:22px; }
+.phase-title { font-size:16px; font-weight:500; }
+.phase-sub { font-size:12px; color:var(--gold-500); font-weight:300; margin-top:1px; }
+.phase-right { display:flex; align-items:center; gap:12px; }
+.phase-count { font-size:12px; color:rgba(23,42,92,0.53); font-weight:400; background:var(--cream-100); padding:4px 10px; border-radius:100px; }
+.phase-check { color:#16a34a; font-size:16px; display:none; }
+.phase-check.show { display:inline; }
+.chevron { width:20px; height:20px; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); color:var(--navy-800); }
+.chevron.open { transform:rotate(180deg); }
+.tasks { padding:0 22px 18px; display:none; }
+.tasks.open { display:block; }
+.task { display:flex; gap:14px; padding:14px 0; border-top:1px solid #f0ebe3; align-items:flex-start; transition:opacity 0.3s; }
+.task.done { opacity:0.5; }
+.checkbox { width:22px; height:22px; border-radius:6px; border:1.5px solid #d0cbc4; flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; background:white; margin-top:1px; }
+.checkbox.checked { background:var(--navy-800); border-color:var(--navy-800); }
+.checkbox.checked svg { display:block; }
+.checkbox svg { display:none; }
+.checkbox:hover { border-color:var(--gold-500); }
+.task-content { flex:1; min-width:0; }
+.task-text { font-size:14px; font-weight:400; color:var(--navy-800); line-height:1.5; }
+.task.done .task-text { text-decoration:line-through; color:rgba(23,42,92,0.4); }
+.task-meta { display:flex; gap:16px; margin-top:5px; flex-wrap:wrap; }
+.task-tag { font-size:11px; font-weight:400; color:rgba(23,42,92,0.53); display:flex; align-items:center; gap:4px; }
+.task-tag span { color:var(--gold-500); }
+
+.kpi-section { background:white; border:1px solid #e8e3dc; border-radius:14px; padding:24px; margin-top:28px; }
+.kpi-title { font-size:14px; font-weight:500; margin-bottom:16px; }
+.kpi-grid { display:grid; grid-template-columns:1fr auto auto; gap:8px 20px; align-items:center; }
+.kpi-name { font-size:13px; font-weight:400; }
+.kpi-value { font-size:13px; font-weight:500; text-align:right; }
+.kpi-type { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; font-weight:500; padding:2px 8px; border-radius:4px; text-align:center; }
+.kpi-type.hard { background:#fef2f2; color:#991b1b; }
+.kpi-type.soft { background:#f0f9ff; color:#1e40af; }
+.kpi-divider { grid-column:1/-1; height:1px; background:#f0ebe3; }
+
+.milestones { margin-top:24px; }
+.milestone { display:flex; gap:14px; margin-bottom:12px; }
+.milestone-week { font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--gold-500); min-width:50px; padding-top:2px; }
+.milestone-text { font-size:13px; font-weight:300; line-height:1.5; color:rgba(23,42,92,0.7); }
+
+.complete-banner { background:linear-gradient(135deg,var(--navy-800),var(--navy-700)); color:var(--cream-50); padding:24px; border-radius:14px; text-align:center; margin-bottom:24px; display:none; }
+.complete-banner.show { display:block; }
+.complete-banner h3 { font-weight:500; font-size:18px; margin-bottom:4px; color:var(--gold-400); }
+.complete-banner p { font-size:14px; font-weight:300; color:rgba(253,252,250,0.8); }
+
+.fade-in { opacity:0; transform:translateY(12px); animation:fadeIn 0.5s forwards; }
+@keyframes fadeIn { to { opacity:1; transform:translateY(0); } }
+
+@media (max-width:600px) {
+  .header { padding:24px 20px; }
+  .main { padding:24px 16px 60px; }
+  .title { font-size:22px; }
+  .info-card { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← Tilbake til Toolbox</a>
+    <div class="logo-text">Bluecrew</div>
+    <div class="title">Onboarding — Steffen Eslinger</div>
+    <div class="subtitle">Business Development Manager · Tiltredelse 17. mars 2026 · Remote fra Stavanger</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="info-card fade-in">
+    <div class="info-item"><div class="info-label">Ansattnr</div><div class="info-value">BC-ANS-0028</div></div>
+    <div class="info-item"><div class="info-label">Stilling</div><div class="info-value">Business Development Manager</div></div>
+    <div class="info-item"><div class="info-label">Ansettelsesform</div><div class="info-value">Fast med 6 mnd. prøvetid</div></div>
+    <div class="info-item"><div class="info-label">Prøvetid utløper</div><div class="info-value">17.09.2026</div></div>
+    <div class="info-item"><div class="info-label">Grunnlønn prøvetid</div><div class="info-value">kr 700 000 brutto/år</div></div>
+    <div class="info-item"><div class="info-label">Grunnlønn etter prøvetid</div><div class="info-value">kr 800 000 brutto/år</div></div>
+    <div class="info-item"><div class="info-label">Provisjon</div><div class="info-value">20% av netto fortjeneste på egen portefølje</div></div>
+    <div class="info-item"><div class="info-label">Signeringsbonus</div><div class="info-value">kr 5 000 per ny kunde signert</div></div>
+  </div>
+
+  <div class="principles fade-in" style="animation-delay:0.1s;">
+    <div class="principles-title">Bluecrew-prinsipper for salg</div>
+    <div class="principle"><strong>Pålitelighet:</strong> Vi leverer det vi lover. Alltid.</div>
+    <div class="principle"><strong>Operativitet:</strong> Vi svarer raskt, handler raskt, løser raskt.</div>
+    <div class="principle"><strong>Kvalitet over volum:</strong> Riktig person på riktig oppdrag slår kvantitet.</div>
+    <div class="principle"><strong>Partnerskap:</strong> Langsiktige kunderelasjoner, ikke engangstransaksjoner.</div>
+    <div class="principle"><strong>Dokumentasjon:</strong> Alt i HubSpot. Ingenting i hodet som ikke er i systemet.</div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="progress-text">
+    <span id="progress-label">0 av 0 oppgaver fullført</span>
+    <span id="progress-pct">0%</span>
+  </div>
+
+  <div class="complete-banner" id="complete-banner">
+    <h3>Onboarding fullført ✓</h3>
+    <p>Steffen er klar. Eventyret er i gang.</p>
+  </div>
+
+  <div id="phases-container"></div>
+
+  <div class="kpi-section fade-in" style="animation-delay:0.4s;">
+    <div class="kpi-title">Harde KPI-er — prøvetidsevaluering 17.09.2026</div>
+    <div class="kpi-grid">
+      <div class="kpi-name">Nye kunder signert</div><div class="kpi-value">8</div><div class="kpi-type hard">Hardt mål</div>
+      <div class="kpi-divider"></div>
+      <div class="kpi-name">Bestillinger/mnd (egne kunder)</div><div class="kpi-value">5 gj.snitt</div><div class="kpi-type hard">Hardt mål</div>
+      <div class="kpi-divider"></div>
+      <div class="kpi-name">Møter booket</div><div class="kpi-value">30</div><div class="kpi-type hard">Hardt mål</div>
+      <div class="kpi-divider"></div>
+      <div class="kpi-name">Konverteringsrate møte → signering</div><div class="kpi-value">Avtales</div><div class="kpi-type soft">Støtte</div>
+      <div class="kpi-divider"></div>
+      <div class="kpi-name">Pipeline-verdi i HubSpot</div><div class="kpi-value">–</div><div class="kpi-type soft">Støtte</div>
+      <div class="kpi-divider"></div>
+      <div class="kpi-name">Kundetilfredshet og oppfølging</div><div class="kpi-value">–</div><div class="kpi-type soft">Støtte</div>
+    </div>
+
+    <div class="milestones">
+      <div style="font-size:14px;font-weight:500;margin-bottom:14px;margin-top:20px;">Milepæler første måned</div>
+      <div class="milestone"><div class="milestone-week">Uke 1</div><div class="milestone-text">Forstå forretningsmodell, prismatrise og kundebase. Kunne forklare Bluecrew-tilbudet.</div></div>
+      <div class="milestone"><div class="milestone-week">Uke 2</div><div class="milestone-text">Selvstendig prospektering startet. Første møtene bookes. Pipeline aktiv i HubSpot.</div></div>
+      <div class="milestone"><div class="milestone-week">Uke 3</div><div class="milestone-text">Første egne kundemøter gjennomført. Markedsinnsikt rapportert.</div></div>
+      <div class="milestone"><div class="milestone-week">Uke 4</div><div class="milestone-text">Statusmøte med Isak. KPI-er fastsatt. Selvstendig i rolle. Eventyret er i gang.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const PHASES = [
+  {
+    id: 'pre', title: 'Før oppstart', subtitle: 'Innen 17. mars', icon: '📦',
+    tasks: [
+      { id:'s01', text:'Arbeidskontrakt signert (fast m/ 6 mnd. prøvetid)', ansvarlig:'Isak', frist:'Før 17.03' },
+      { id:'s02', text:'Google Workspace-konto (@bluecrew.no)', ansvarlig:'Isak', frist:'Før 17.03' },
+      { id:'s03', text:'Slack-invitasjon + kanaler: #salg, #general, #leads, #kunder', ansvarlig:'Isak', frist:'Før 17.03' },
+      { id:'s04', text:'HubSpot CRM-tilgang (pipeline, kontakter, deals)', ansvarlig:'Isak', frist:'Før 17.03' },
+      { id:'s05', text:'Tripletex brukertilgang (timeføring, reiseregninger)', ansvarlig:'Isak', frist:'Før 17.03' },
+      { id:'s06', text:'PC/Mac + telefon klargjort og sendt til Stavanger', ansvarlig:'Isak', frist:'Før 17.03' },
+      { id:'s07', text:'E-postsignatur etter Bluecrew brand kit', ansvarlig:'Isak', frist:'Før 17.03' },
+      { id:'s08', text:'Visittkort bestilt', ansvarlig:'Isak', frist:'Før 17.03' },
+      { id:'s09', text:'Tilgang til Google Drive – salgsmaler, tilbudsmaler, kundeoversikt', ansvarlig:'Isak', frist:'Før 17.03' }
+    ]
+  },
+  {
+    id: 'dag1', title: 'Dag 1', subtitle: '17. mars 2026', icon: '🚀',
+    tasks: [
+      { id:'s10', text:'Velkomstsamtale med Isak – visjon, verdier, forventninger', ansvarlig:'Isak', frist:'17.03' },
+      { id:'s11', text:'Gjennomgang av arbeidskontrakt: KPI-er, provisjonsmodell, prøvetid', ansvarlig:'Isak', frist:'17.03' },
+      { id:'s12', text:'Intro til organisasjonen: roller, ansvarsfordeling og samarbeidsflater', ansvarlig:'Isak', frist:'17.03' },
+      { id:'s13', text:'Gjennomgang av Bluecrew brand kit og tone of voice', ansvarlig:'Isak', frist:'17.03' },
+      { id:'s14', text:'HubSpot, Tripletex, Slack, Google Workspace, AdminCrew – systemoppsett', ansvarlig:'Isak', frist:'19.03' },
+      { id:'s15', text:'HubSpot-oppsett: pipeline-steg, deal-registrering, kundeeierskap', ansvarlig:'Isak', frist:'19.03' },
+      { id:'s16', text:'Gjennomgang av eksisterende kundeliste og pipeline', ansvarlig:'Isak', frist:'21.03' },
+      { id:'s17', text:'Første Slack-runde: si hei i #general', ansvarlig:'Steffen', frist:'17.03' }
+    ]
+  },
+  {
+    id: 'uke1', title: 'Uke 1', subtitle: '17.–21. mars', icon: '📅',
+    tasks: [
+      { id:'s18', text:'Prismatrise gjennomgang – havbruk, industri, offshore (ulike marginkrav)', ansvarlig:'Isak', frist:'18.–19.03' },
+      { id:'s19', text:'Forretningsmodell: kostnadskalkyle, overhead 15%, netto fortjeneste-beregning', ansvarlig:'Isak', frist:'18.–19.03' },
+      { id:'s20', text:'Dypdykk i havbruk/akvakultur-segmentet (primærfokus per kontrakt)', ansvarlig:'Isak', frist:'18.–20.03' },
+      { id:'s21', text:'Intro til nøkkelkunder: Norgeskjel, Westcon, Trident, ZeonAqua, KB-Gruppen, Gigante Salmon', ansvarlig:'Isak', frist:'18.–21.03' },
+      { id:'s22', text:'Gjennomgang av kundepitch-maler og tilbudsprosess', ansvarlig:'Isak', frist:'19.–20.03' },
+      { id:'s23', text:'Observere 2–3 kundesamtaler/møter', ansvarlig:'Isak', frist:'19.–21.03' },
+      { id:'s24', text:'AML-regulering: vikarbyrdirektivet, likebehandlingsregler, innleieregler', ansvarlig:'Isak', frist:'20.–21.03' },
+      { id:'s25', text:'HMS: sikkerhetshåndbok, avviksrapportering, forbedringspotensiale-skjema', ansvarlig:'Isak', frist:'21.03' },
+      { id:'s26', text:'Signeringsbonusordning (kr 5 000/ny kunde) – hva teller som ny kunde', ansvarlig:'Isak', frist:'21.03' },
+      { id:'s27', text:'Oppsummering uke 1 – spørsmål, inntrykk, første prioriteringer', ansvarlig:'Isak + Steffen', frist:'21.03' }
+    ]
+  },
+  {
+    id: 'ramp', title: 'Uke 2–4', subtitle: 'Ramp-up', icon: '🎯',
+    tasks: [
+      { id:'s28', text:'Selvstendig oppfølging av 5–10 prospekter fra pipeline', ansvarlig:'Steffen', frist:'Uke 2' },
+      { id:'s29', text:'Første egne kundemøter (backup tilgjengelig ved behov)', ansvarlig:'Steffen', frist:'Uke 2–3' },
+      { id:'s30', text:'Lage første tilbud med korrekt prismatrise og registrere i HubSpot', ansvarlig:'Steffen', frist:'Uke 2' },
+      { id:'s31', text:'Intern koordinering: test samarbeid med operasjon på faktisk leveranse', ansvarlig:'Steffen', frist:'Uke 2–3' },
+      { id:'s32', text:'Delta i ukentlig ledermøte (onsdag kl. 10)', ansvarlig:'Isak', frist:'Ukentlig' },
+      { id:'s33', text:'Rapportere markedsinnsikt: trender, konkurrentaktivitet, prisbevegelser', ansvarlig:'Steffen', frist:'Løpende' },
+      { id:'s34', text:'Pipeline i HubSpot oppdatert og dokumentert fortløpende', ansvarlig:'Steffen', frist:'Daglig' },
+      { id:'s35', text:'Første statusmøte med Isak – KPI-gjennomgang mot harde mål', ansvarlig:'Isak', frist:'Uke 4' },
+      { id:'s36', text:'Avtale konkrete minimumstall for KPI-er', ansvarlig:'Isak + Steffen', frist:'Innen 31.03' }
+    ]
+  }
+];
+
+let checkedState = {};
+let openPhases = { pre: true };
+
+function togglePhase(phaseId) {
+  openPhases[phaseId] = !openPhases[phaseId];
+  const tasks = document.getElementById('tasks-' + phaseId);
+  const chevron = document.getElementById('chevron-' + phaseId);
+  tasks.classList.toggle('open', !!openPhases[phaseId]);
+  chevron.classList.toggle('open', !!openPhases[phaseId]);
+}
+
+function toggleCheck(taskId) {
+  checkedState[taskId] = !checkedState[taskId];
+  document.getElementById('task-' + taskId).classList.toggle('done', !!checkedState[taskId]);
+  document.getElementById('cb-' + taskId).classList.toggle('checked', !!checkedState[taskId]);
+  updateProgress();
+}
+
+function updateProgress() {
+  let total = 0, done = 0;
+  PHASES.forEach(phase => {
+    total += phase.tasks.length;
+    const phaseDone = phase.tasks.filter(t => checkedState[t.id]).length;
+    done += phaseDone;
+    const c = document.getElementById('count-' + phase.id);
+    const ch = document.getElementById('phasecheck-' + phase.id);
+    if (c) c.textContent = phaseDone + '/' + phase.tasks.length;
+    if (ch) ch.classList.toggle('show', phaseDone === phase.tasks.length);
+  });
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = done + ' av ' + total + ' oppgaver fullført';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('complete-banner').classList.toggle('show', pct === 100 && total > 0);
+}
+
+function renderPhases() {
+  const container = document.getElementById('phases-container');
+  container.innerHTML = '';
+  PHASES.forEach((phase, pi) => {
+    const isOpen = !!openPhases[phase.id];
+    const phaseDone = phase.tasks.filter(t => checkedState[t.id]).length;
+    let tasksHtml = '';
+    phase.tasks.forEach(task => {
+      const isDone = !!checkedState[task.id];
+      tasksHtml += `<div class="task ${isDone ? 'done' : ''}" id="task-${task.id}">
+        <div class="checkbox ${isDone ? 'checked' : ''}" id="cb-${task.id}" onclick="toggleCheck('${task.id}')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="var(--gold-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="task-content">
+          <div class="task-text">${task.text}</div>
+          <div class="task-meta">
+            <div class="task-tag"><span>→</span> ${task.ansvarlig}</div>
+            <div class="task-tag"><span>⏱</span> ${task.frist}</div>
+          </div>
+        </div>
+      </div>`;
+    });
+    const phaseEl = document.createElement('div');
+    phaseEl.className = 'phase fade-in';
+    phaseEl.style.animationDelay = (0.15 + pi * 0.08) + 's';
+    phaseEl.innerHTML = `
+      <div class="phase-header" onclick="togglePhase('${phase.id}')">
+        <div class="phase-left"><span class="phase-icon">${phase.icon}</span><div><div class="phase-title">${phase.title}</div><div class="phase-sub">${phase.subtitle}</div></div></div>
+        <div class="phase-right">
+          <span class="phase-count" id="count-${phase.id}">${phaseDone}/${phase.tasks.length}</span>
+          <span class="phase-check" id="phasecheck-${phase.id}">✓</span>
+          <svg class="chevron ${isOpen ? 'open' : ''}" id="chevron-${phase.id}" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+      <div class="tasks ${isOpen ? 'open' : ''}" id="tasks-${phase.id}">${tasksHtml}</div>`;
+    container.appendChild(phaseEl);
+  });
+}
+
+renderPhases();
+updateProgress();
+</script>
+</body>
+</html>
